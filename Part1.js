@@ -20,10 +20,8 @@ const randomLetter = () => {
 // function randomCoords(){
 let randCoord1 = randomLetter();
 let randCoord3 = randomLetter();
-let randCoord2 = randomizer(3) + 1;
-let randCoord4 = randomizer(3) + 1;
-let enemyShip1 = [randCoord1 + randCoord2];
-let enemyShip2 = [randCoord3 + randCoord4];
+let enemyShip1 = [randCoord1 + (randomizer(3) + 1)];
+let enemyShip2 = [randCoord3 + (randomizer(3) + 1)];
 let enemyCoords = [enemyShip1, enemyShip2];
 // };
 // randomCoords();
@@ -45,11 +43,11 @@ function guesser() {
 
 //Hit or miss
 function battleChecker(guess, enemyCoords) {
-    if (enemyCoords.includes(guess)) {
-        console.log("You have hit");
+    if (enemyCoords.includes(guess)) {        
         let lastEnemy = enemyCoords.filter(coord => coord != guess);
+        console.log(`You have hit a Battleship! You have ${lastEnemy.length} remaining! `);
         return lastEnemy;
-    } else if(prevGuesses.includes(guess)){
+    } else if(prevGuesses.includes(nextGuess)){
         console.log(`You've already guessed ${guess}! Miss!`);
     } else {
         console.log('You have missed!');console.log(enemyCoords);
@@ -58,12 +56,11 @@ function battleChecker(guess, enemyCoords) {
 
 function game(guess, enemies) {
     if (enemies[0] !== [] && enemies[1] !== []) {
-        // guesser();
-        battleChecker(playerGuess, enemies);
-        game(playerGuess, enemies);
+        let nextGuess = guesser();
+        battleChecker(nextGuess, enemies);
+        game(nextGuess, enemies);
     } else {
-        console.log('YOU HAVE WON THE BATTLE');
-        break;
+       return console.log('YOU HAVE WON THE BATTLE');
     };
 };
 

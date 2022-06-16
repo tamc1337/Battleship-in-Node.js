@@ -126,10 +126,147 @@
 const alpha = Array.from(Array(26)).map((e, i) => i + 65);
 const alphabet = alpha.map((x) => String.fromCharCode(x));
 function gridBuilder(num){
+    let arr=[];
+    for (i=0; i<num; i++){
+        let k = alphabet[i]+(i+1);
+        for(j=0; j<num;j++){
+            arr.push(alphabet[j]+(i+1));
+        };
+        if (!arr.includes(k)){
+        arr.push(alphabet[i]+(i+1));}
+    }
+    return arr;
+}
+const lenAndWid = 10;
+const theGrid = gridBuilder(lenAndWid);
+// console.log(gridBuilder(lenAndWid));
+// returns an array of coordinates
+/*.sort((a,b) => a-b)*/
+
+//ship builder
+
+const randomizer = maxNum => Math.floor(Math.random() * maxNum);
+const randomFirstCoord = () => {
+    let num = randomizer(100);
+    return theGrid[num];
+};
+const randomBool = Math.random() < 0.5; 
+
+console.log(`First random Coord is ${randomFirstCoord()}.`);
+// console.log(`Rabdom Bool is ${randomBool}.`);
+
+
+const coordSplitter = (firstCoord = randomFirstCoord()) => {
+    firstCoord.split("");
+    // if (firstCoord[2]==0){
+    //     firstCoord[1].concat(firstCoord[2]);
+    // }
+    return firstCoord;
+};
+let firstShip = coordSplitter();
+let secondShip = coordSplitter();
+let thirdShip = coordSplitter();
+let fourthShip = coordSplitter();
+let fifthShip = coordSplitter();
+
+// console.log(`the first ship is at ${(firstShip)}.`);
+// console.log(`the second ship is at ${(secondShip)}.`);
+// console.log(`the third ship is at ${(thirdShip)}.`);
+// console.log(`the fourth ship is at ${(fourthShip)}.`);
+console.log(`the fifth ship is at ${(fifthShip)}.`);
+console.log(`the fifth ship is at ${fifthShip[1]}.`);
+
+let firstFirst = firstShip[0];
+let secondFirst = secondShip[0];
+let thirdFirst = thirdShip[0];
+let fouthFirst = fourthShip[0];
+let fifthFirst = fifthShip[0];
+let totalCoords = [];
+
+/* LAST INDEX OF!! A-J will either be [0-9] OR [1-10], the last index of the coord vvvvvv will only ever be digits 0-9.  */
+let firstSecond = firstShip[firstShip.length-1];
+let secondSecond = secondShip[secondShip.length-1];
+let thirdSecond = thirdShip[thirdShip.length-1];
+let fouthSecond = fourthShip[fourthShip.length-1];
+let fifthSecond = fifthShip[fifthShip.length-1];
+
+
+console.log(` ${fifthSecond}.`);
+
+// If vertical, only going to call this first coord to change letter
+const firstCoordBuilder = (firstShip, shipFirst, shipLength) => {
+    let shipArray=[];
+    let indexOfLetter = alphabet.indexOf(shipFirst);
+    if (indexOfLetter<(lenAndWid-shipLength)){
+        for (let i=0;i<shipLength;i++){
+            let hold = 
+            shipArray.push()
+        }
+        //build array of coords with firstShip, nextship= alphabet[indexOfLetter+1], itterate through shipLength, and push it to totalCoords
+        return alphabet[indexOfLetter];
+    } else if (indexOfLetter>(lenAndWid-shipLength)){
+        let newIndex = (indexOfLetter - shipLength);
+        // alphabet[newIndex] is now the first coord in the array, build it out like above, and add each coord to totalCoords. If ever a Duplicate,
+    } else if (totalCoords.includes(indexOfLetter,))
+
+   /*while ( (indexOfLetter + shipLength) > 10){
+        shipFirst -1;
+        firstCoordBuilder(shipFirst,shipLength)};
+        return alphabet[indexOfLetter];*/
+/*
+console.log(`This is the first coord letter of ship 1 ${firstCoordBuilder(firstShip,2)}`);
+
+//return letter that will then be pairedwith number in array
+const secondCoordBuilder = (shipSecond, shipLength) => {
+    let indexNumber = parseInt(shipSecond);
+    while ( (indexNumber + shipLength) > 10){
+        shipSecond -1;
+        firstCoordBuilder(shipSecond,shipLength)};
+        return indexNumber ;
     
 }
-// returns an array of coordinates
+console.log(`This is the second coord letter of ship 1 ${secondCoordBuilder(firstShip,2)}`);
 
+function shipBuilderFunc(rand , shipLength = 0, isVertical = randomBool){
+    let finalArr=[];
+    let indexLetter = alphabet.indexOf(arr[0]);
+    inLetterBounds(indexLetter,shipLength);
+    let plusLength = alphabet[indexLetter+shipLength]; 
+    inNumberBounds(arr[1], shipLength);
 
+    let ifVert = firstCoordBuilder() + arr[1];
+    let ifHorz = arr[0] + secondCoordBuilder();
+    if (isVertical){
 
+       finalArr.push(firstCoord, ifVert) ;
+    } else {
 
+        finalArr.push(firstCoord, ifHorz) ;
+    }
+    return finalArr
+}
+
+const battleship1 = shipBuilderFunc(randomFirstCoord(), 2,false)
+
+console.log(coordSplitter());
+// console.log(battleship2);
+
+class Ship {
+    constructor(firstCoordBuilder,secondCoordBuilder,coordList, isSunk, shipLength, orientation){
+      /*  this.coords = coords; // array of coords 
+        this.firstCoord = firstCoord; // random coord func 
+        this all needs to be made with a function
+        
+        this.isSunk = isSunk; // random bool
+        this.shipLength = shipLength;
+        // lengths predetermed? like ship 1 is 2 units, ship 2 
+        // is 3 units, 3 is 3 units, 4 is 4 units, 5 is 5 units
+        this.orientation = orientation;
+        // isVertical = t/f
+    }
+}
+
+const shipOne = new Ship(['b2,c3'],randomFirstCoord(),false,2, true);
+// console.log(shipOne.firstCoord);
+// const shipTwo = new Ship(randomCoord(),false,shipLength, orientated);
+*/

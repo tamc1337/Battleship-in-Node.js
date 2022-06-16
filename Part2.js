@@ -2,29 +2,37 @@ const rs = require('readline-sync');
 const initQuestion = rs.keyIn('Press any key to start.');
 
 function entireGame(){
-// Variables
-
-const grid = [
-    ['A1'], ['A2'], ['A3'],
-    ['B1'], ['B2'], ['B3'],
-    ['C1'], ['C2'], ['C3'],
-];
+// Grid Builder
+const alpha = Array.from(Array(26)).map((e, i) => i + 65);
+const alphabet = alpha.map((x) => String.fromCharCode(x));
+function gridBuilder(num){
+    let arr=[];
+    for (i=0; i<num; i++){
+        let k = alphabet[i]+(i+1);
+        for(j=0; j<num;j++){
+            arr.push(alphabet[j]+(i+1));
+        };
+        if (!arr.includes(k)){
+        arr.push(alphabet[i]+(i+1));}
+    }
+    return arr;
+}
+const theGrid = gridBuilder(10);
 let prevGuesses = [];
 
 //Random Enemy Coordinates 
 const randomizer = maxNum => Math.floor(Math.random() * maxNum);
-const randomCoord = () => {
-    let num = randomizer(9);
-    return grid.flat(1)[num];
+const randomFirstCoord = () => {
+    let num = randomizer(100);
+    return grid[num];
 };
-const ship1 = {
-    coords: randomCoord(),
-    isSunk: false,
-};
-const ship2 = {
-    coords: randomCoord(),
-    isSunk: false,
-};
+// Constructor builds the/++++0.-ds: randomCoord(),
+//     isSunk: false,
+// };
+// const ship2 = {
+//     coords: randomCoord(),
+//     isSunk: false,
+// };
 let enemyCoords = [ship1.coords, ship2.coords];
 let  enemiesLeft = (enemyCoords.map((enemies) => enemies.isSunk ===false).length) -1 ;
 
@@ -33,10 +41,14 @@ let  enemiesLeft = (enemyCoords.map((enemies) => enemies.isSunk ===false).length
 // Guess  
 function guesser() {
     let coordGuess = rs.question('Enter strike location with a letters a,b, or c, and either numbers 1,2, or 3, such as "A1" or "C3".', {
-        limit: grid.flat(1),
-        limitMessage: 'Please only enter A, B, or C with 1,2,or 3, such as "C2" or "B3". '
+        limit: theGrid,
+        limitMessage: 'Please only enter letters A-J with only numbers 1-10 such as "A3" or "B10". '
     });
     let actualCoordGuess = coordGuess.toUpperCase();
+
+
+    // Break this into duplicate checker function
+
     if (prevGuesses.includes(actualCoordGuess)) {
         console.log(`You've already guessed ${actualCoordGuess}! Miss!`);
     }
@@ -60,10 +72,10 @@ function hitChecker(guess, enemyShip1, enemyShip2) {
 
 
         /* This is for cheating in the game to make it go faster (and helped with my coding ;D ) 
-
+        vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
         console.log(`Try aiming for ${enemyCoords}.`);
-        
-        Remove these if you want EZ mode*/
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        Remove this comment if you want EZ mode*/
     };
 }
 

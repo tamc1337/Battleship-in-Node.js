@@ -17,26 +17,110 @@ function gridBuilder(num){
     }
     return arr;
 }
-const theGrid = gridBuilder(10);
+const lenAndWid = 10;
+const theGrid = gridBuilder(lenAndWid);
 let prevGuesses = [];
 
 //Random Enemy Coordinates 
 const randomizer = maxNum => Math.floor(Math.random() * maxNum);
-const randomFirstCoord = () => {
+const randomCoord = () => {
     let num = randomizer(100);
-    return grid[num];
+    return theGrid[num];
 };
-// Constructor builds the/++++0.-ds: randomCoord(),
-//     isSunk: false,
-// };
-// const ship2 = {
-//     coords: randomCoord(),
-//     isSunk: false,
-// };
-let enemyCoords = [ship1.coords, ship2.coords];
-let  enemiesLeft = (enemyCoords.map((enemies) => enemies.isSunk ===false).length) -1 ;
+
+const randomBool = Math.random() < 0.5;
+const coordSplitter = (firstCoord = randomCoord()) => {
+    firstCoord.split("");
+    return firstCoord;
+};
+const indexOfLetter = (shipFirstIndex) => alphabet.indexOf(shipFirstIndex);
+
+// Ship Builder
+const wholeShipBuilderVertical = (shipFirstLetter, shipLength, shipLast) => {
+    let shipArray = [];
+    for (let i = 0; i < shipLength; i++) {
+        shipArray.push(alphabet[indexOfLetter(shipFirstLetter) + i].concat(shipLast));
+    }
+    return shipArray;
+}
+const wholeShipBuilderHorizontal = (shipFirstLetter, shipLength, shipLast) => {
+    let shipArray = [];
+    for (let i = 0; i < shipLength; i++) {
+        if (shipLast !== 10) {
+            shipArray.push(shipFirstLetter + (Number(shipLast) + Number(i)));
+        } else if (shipLast === 10){
+            shipArray.push(shipFirstLetter + (7 + i));
+        }
+    }
+    return shipArray;
+}
+
+// If vertical, only going to call this first coord to change letter
+
+const borderCheckerVertical = (shipFirstLetter, shipLength, shipLast) => {
+
+    //run it like usual if its NOT over j and it's NOT 10   
+    if (indexOfLetter(shipFirstLetter) <= (lenAndWid - shipLength) && shipLast != 0) {
+        return wholeShipBuilderVertical(shipFirstLetter, shipLength, shipLast);
+
+        //if IS going to run over j and NOT 10, subtract the ship length so  new ind max letter will be j
+    } else if (indexOfLetter(shipFirstLetter) > (lenAndWid - shipLength) && shipLast != 0) {
+        let newIndex = (indexOfLetter(shipFirstLetter) - shipLength);
+        return wholeShipBuilderVertical(alphabet[newIndex], shipLength, shipLast);
+
+        // if IS going to run over j and IS 10, newInd and 10
+    } else if (indexOfLetter(shipFirstLetter) > (lenAndWid - shipLength) && shipLast == 0) {
+        let newIndex = (indexOfLetter(shipFirstLetter) - shipLength);
+        return wholeShipBuilderVertical(alphabet[newIndex], shipLength, 10);
+
+        // if NOT over j and IS 10, first ship and 10
+    } else if (indexOfLetter(shipFirstLetter) <= (lenAndWid - shipLength) && shipLast == 0) {
+
+        return wholeShipBuilderVertical(shipFirstLetter, shipLength, 10)
+    }
+};
+
+const borderCheckerHorizontal = (shipFirstLetter, shipLength, shipLast) => {
+    //if number NOT go over and coord is NOT 10
+    if (shipLast <= (lenAndWid - shipLength) && shipLast != 0) {
+        return wholeShipBuilderHorizontal(shipFirstLetter, shipLength, shipLast);
+
+        //if number DOES over and cord  is NOT 10
+    } else if (shipLast > (lenAndWid - shipLength)) {
+        let newLast = (lenAndWid - shipLength) + 1;
+        return wholeShipBuilderHorizontal(shipFirstLetter, shipLength, newLast);
+
+        // if num DOES go over and IS 10, i'll fix it in the next PROBLEM IS HERE
+    } else if (shipLast == 0) {
+        return wholeShipBuilderHorizontal(shipFirstLetter, shipLength, 10);
+    };
+}
 
 
+const vertCheck = (isVert, shipFirstLetter, shipLast, shipLength) => {
+    if (isVert) {
+        return borderCheckerVertical(shipFirstLetter, shipLength, shipLast);
+    } else {
+        return borderCheckerHorizontal(shipFirstLetter, shipLength, shipLast);
+    }
+};
+
+class Ship {
+    constructor(shipNum, shipLength, firstCoord,isVert, isSunk = false){
+        this.shipNum = shipNum;
+        this.shipLength = shipLength;
+        this.firstCoord = firstCoord; // coordSplitter() 
+        this.isVert= isVert;// randomBool()
+        this.isSunk = isSunk;
+
+        this.fullCoords = vertCheck (this.isVert, this.firstCoord[0], this.firstCoord[this.firstCoord.length - 1],this.shipLength);
+}
+}
+const shipOne = new Ship(1,2,coordSplitter(), randomBool);
+const shipTwo = new Ship(2,3,coordSplitter(), randomBool);
+const shipThree = new Ship(3,3,coordSplitter(), randomBool);
+const shipFour = new Ship(4,4,coordSplitter(),randomBool);
+const shipFive = new Ship(5,5,coordSplitter(),randomBool);
 
 // Guess  
 function guesser() {
@@ -45,6 +129,7 @@ function guesser() {
         limitMessage: 'Please only enter letters A-J with only numbers 1-10 such as "A3" or "B10". '
     });
     let actualCoordGuess = coordGuess.toUpperCase();
+
 
 
     // Break this into duplicate checker function

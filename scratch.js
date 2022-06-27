@@ -40,3 +40,13 @@
 // // console.log(firstSecond);
 
 
+const obbers = {
+    name: 'dude',
+    stance: 'neutral',
+    auras: 3,
+    deaths: 0,
+    boobs: false,
+}
+for (const [ppp,vvv] of Object.entries(obbers)){
+    console.log(vvv);
+}

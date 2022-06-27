@@ -168,13 +168,13 @@ const fullCoordsBuilder = (ship) => {
 class Ship {
     constructor(shipNum, shipLength, firstCoord,isVert, isSunk = false){
         this.shipNum = shipNum; //to give ship unique ID
-        this.shipLength = shipLength;
+        this.shipLength = shipLength; // assigned when creating the ships
         this.firstCoord = firstCoord; // coordSplitter() 
-        this.isVert= isVert;// randomBool()
-        this.isSunk = isSunk;
+        this.isVert= isVert;// randomBoolean to determine the ships' heading
+        this.isSunk = isSunk; // will change in the actual game
 
         this.fullCoords = vertCheck (this.isVert, this.firstCoord[0], this.firstCoord[this.firstCoord.length - 1],this.shipLength);
-        this.dupeCheck = dupeCoordsChecker(this.fullCoords);//only use this if it's true in the full?
+        this.dupeCheck = dupeCoordsChecker(this.fullCoords);// used for testing
 
         // this.fullCoordsBuilder = fullCoordsBuilder(this.fullCoords, Ship.prototype.fullCoords, this.isVert,this.firstCoord[0],this.firstCoord[this.firstCoord.length - 1],this.shipLength); // This needs to be running in here to change the coords before they're pushed.
 
@@ -267,7 +267,7 @@ console.log(totalCoords);
 
 // if new ship's coords are a duplication of other coords, it returns true.
 
-  //Turn this into a function, template litterals
+//Turn this into a function, template litterals
 
 // const fullCoordsBuilder = () =>{
 //     while(dupeCoordsChecker(this.fullCoords)){

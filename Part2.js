@@ -19,7 +19,9 @@ function gridBuilder(num){
 }
 const lenAndWid = 10;
 const theGrid = gridBuilder(lenAndWid);
+const randomBool = () => (Math.random() < 0.5);
 let prevGuesses = [];
+let totalCoords = []; 
 
 //Random Enemy Coordinates 
 const randomizer = maxNum => Math.floor(Math.random() * maxNum);
@@ -28,7 +30,7 @@ const randomCoord = () => {
     return theGrid[num];
 };
 
-const randomBool = Math.random() < 0.5;
+
 const coordSplitter = (firstCoord = randomCoord()) => {
     firstCoord.split("");
     return firstCoord;
@@ -49,7 +51,7 @@ const wholeShipBuilderHorizontal = (shipFirstLetter, shipLength, shipLast) => {
         if (shipLast !== 10) {
             shipArray.push(shipFirstLetter + (Number(shipLast) + Number(i)));
         } else if (shipLast === 10){
-            shipArray.push(shipFirstLetter + (7 + i));
+            shipArray.push(shipFirstLetter + (6 + i));
         }
     }
     return shipArray;
@@ -95,8 +97,7 @@ const borderCheckerHorizontal = (shipFirstLetter, shipLength, shipLast) => {
         return wholeShipBuilderHorizontal(shipFirstLetter, shipLength, 10);
     };
 }
-
-
+// This sorts the first coordinate to the respective 
 const vertCheck = (isVert, shipFirstLetter, shipLast, shipLength) => {
     if (isVert) {
         return borderCheckerVertical(shipFirstLetter, shipLength, shipLast);
@@ -105,78 +106,133 @@ const vertCheck = (isVert, shipFirstLetter, shipLast, shipLength) => {
     }
 };
 
-class Ship {
-    constructor(shipNum, shipLength, firstCoord,isVert, isSunk = false){
-        this.shipNum = shipNum;
-        this.shipLength = shipLength;
-        this.firstCoord = firstCoord; // coordSplitter() 
-        this.isVert= isVert;// randomBool()
-        this.isSunk = isSunk;
 
-        this.fullCoords = vertCheck (this.isVert, this.firstCoord[0], this.firstCoord[this.firstCoord.length - 1],this.shipLength);
-}
-}
-const shipOne = new Ship(1,2,coordSplitter(), randomBool);
-const shipTwo = new Ship(2,3,coordSplitter(), randomBool);
-const shipThree = new Ship(3,3,coordSplitter(), randomBool);
-const shipFour = new Ship(4,4,coordSplitter(),randomBool);
-const shipFive = new Ship(5,5,coordSplitter(),randomBool);
+const dupeCoordsChecker = (coords) => {
+    if (!coords.some(elm => totalCoords.includes(elm))) {
+        return false;
+    } else {
+        return true;
+    }
+};
+
+function generateShip(shipLength){
+    let firstCoord = coordSplitter();
+    let orientation = randomBool();
+    let coords = vertCheck(orientation, firstCoord[0], firstCoord[firstCoord.length - 1], shipLength);
+    return shipDupeChecker(coords);
+ };
+ const shipDupeChecker = (coords) => {
+    if (dupeCoordsChecker(coords)) {
+        return generateShip(coords.length);
+    } else {
+        totalPusher(coords);
+        return coords;
+    }
+};
+
+function totalPusher(coords) {
+    totalCoords.push(...coords);
+}; 
+
+ class Ship {
+    constructor(num, shipLength,coords, isSunk = false){
+        this.num = num; 
+        this.shipLength = shipLength;
+        this.isSunk = isSunk; 
+        this.coords = coords;
+    };
+ }
+    const shipOne = new Ship(1,2,generateShip(2), false);
+    const shipTwo = new Ship(2,3,generateShip(3), false);
+    const shipThree = new Ship(3,3,generateShip(3), false);
+    const shipFour = new Ship(4,4,generateShip(4), false);
+    const shipFive = new Ship(5,5,generateShip(5), false);
+
+    const fleet = [shipOne,shipTwo,shipThree,shipFour,shipFive];
+    const fleetMap = fleet.map((x)=> x.coords);
+// fleetmap is nested totalcoords
 
 // Guess  
+function duplicateGuessChecker(theGuess){
+    if (prevGuesses.includes(theGuess)) {
+        console.log(`You've already guessed ${theGuess}! Miss!`);
+        guesser();
+    }
+    prevGuesses.push(theGuess);
+    console.log(`Your previous guesses include: ${prevGuesses}. Happy Hunting!`);
+    return theGuess;
+};
+
 function guesser() {
-    let coordGuess = rs.question('Enter strike location with a letters a,b, or c, and either numbers 1,2, or 3, such as "A1" or "C3".', {
+    let coordGuess = rs.question('Enter strike location with a letter a through j, and a number 1 through 10, such as "A1" or "B10".', {
         limit: theGrid,
         limitMessage: 'Please only enter letters A-J with only numbers 1-10 such as "A3" or "B10". '
     });
     let actualCoordGuess = coordGuess.toUpperCase();
-
-
-
-    // Break this into duplicate checker function
-
-    if (prevGuesses.includes(actualCoordGuess)) {
-        console.log(`You've already guessed ${actualCoordGuess}! Miss!`);
-    }
-    prevGuesses.push(actualCoordGuess);
-    console.log(`Your previous guesses include: ${prevGuesses}. Happy Hunting!`);
-    return actualCoordGuess;
+    return duplicateGuessChecker(actualCoordGuess);
 };
+
 
 //Hit or miss
-function hitChecker(guess, enemyShip1, enemyShip2) {
-    if (guess === enemyShip1.coords || guess === enemyShip2.coords) {
-        console.log(`You have hit a Battleship! You have ${enemiesLeft} ship remaining! `);
-        if (guess == enemyShip1.coords) {
-            enemyShip1.isSunk = true;
-        } else if (guess == enemyShip2.coords) {
-            enemyShip2.isSunk = true;
-        };
-    }
-    else {
+const hitCoords = [];
+// let shipsToGo = totalCoords.length-(hitCoords.length);
+const hitCheck = (guess) => {
+    if (totalCoords.includes(guess)){
+        console.log(`the ships to go is ${totalCoords.length-(hitCoords.length)}`);
+        hitCoords.push(guess);
+        console.log(`You have hit a Battleship! You have ${totalCoords.length-(hitCoords.length)} ship remaining! `);
+    } else {
         console.log('You have missed!');
-
-
+        console.log(`the ships to go is ${totalCoords.length-(hitCoords.length)}`);
+    }
         /* This is for cheating in the game to make it go faster (and helped with my coding ;D ) 
-        vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-        console.log(`Try aiming for ${enemyCoords}.`);
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv*/
+        console.log(`Try aiming for ${totalCoords}.`);
+        /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         Remove this comment if you want EZ mode*/
-    };
+        deadCheckAll(fleet);
+};
+
+//THIS Method checks an idividual ship, will have to run this through a seperate function
+const deadShipCheck = (ship) => {
+    if (hitCoords.includes(ship.coords)){
+        ship.isSunk = true;
+        console.log(`Ship Number ${ship.num} is sunk!`);
+    }
+};
+
+const deadCheckAll = (fleet) => {
+    for(const ship of fleet){
+        deadShipCheck(ship);
+    }
+};
+
+// const includedInTotal = (x) => totalCoords.includes(x);
+
+const gameOverCheck = () =>{
+if (deadCheckAll(fleet)){
+    console.log("YOU HAVE WON! NO SHIPS REMAINING");
 }
+};
+
 
 // Actual game structure
-function game(guess, enemy1, enemy2) {
-    if (prevGuesses.includes(enemy1.coords) &&
-        prevGuesses.includes(enemy2.coords)) {
+function game(guess) {
+    if (totalCoords.length-(hitCoords.length) === 0) {
         return console.log('YOU HAVE DESTROYED ALL BATTLESHIPS AND HAVE WON THE BATTLE');
-    } else {
-        hitChecker(guess, enemy1, enemy2);
+    } else if(!fleet.every((ship)=> {totalCoords.includes(ship)})) {
+        hitCheck(guess);
+        console.log(`the coords hit are ${hitCoords}`);
         let nextGuess = guesser();
-        game(nextGuess, enemy1, enemy2);
-    };
+        game(nextGuess);
+    } else {
+        console.log('somthing messed up');
+    }
+    ;
 };
-let startGuess = guesser;
-game(startGuess(), ship1, ship2);
+
+let startGuess = guesser();
+game(startGuess);
 if (rs.keyInYN('Do you wish to play again? Please enter Y or N')){
     entireGame();}
 }

@@ -1,0 +1,177 @@
+// function game(guess) {
+//     if ( ){
+//         return console.log('YOU HAVE DESTROYED ALL BATTLESHIPS AND HAVE WON THE BATTLE');
+//     } else {
+//         hitChecker(guess, enemy1, enemy2);
+//         let nextGuess = guesser();
+//         game(nextGuess, enemy1, enemy2);
+//     };
+// };
+// let startGuess = guesser;
+// game(startGuess(), ship1, ship2);
+// if (rs.keyInYN('Do you wish to play again? Please enter Y or N')){
+//     entireGame();}
+// }
+
+// entireGame();
+
+
+
+
+
+// setBuilder(); // build function where set size is not at total ship lengths sum, to reroll the previous object
+
+// for (const [prop,val] of Object.entries(shipFive)){
+//     console.table(val);
+// }
+
+// totalCoordsSet.add((totalCoords.flat()));
+
+// console.log(totalCoordsSet);
+
+
+
+// console.log(totalCoords.length);
+// console.log(totalCoordsSet.size);
+//AN ARRAY OF OBJECTS - jason from the meeting today 6.18.22
+
+
+// Idea for dupe checker: add items from ship 1 to a new array[] by ...
+// if  newarray.includes any of ship2, then shipTwo.firstCoord = coord splitter, then run through dupecheck again. 
+
+
+// console.log(shipOne);
+// console.log(shipOne.fullCoords);
+// console.log(shipOne.fullCoordsBuilder);
+
+// console.log(shipTwo);
+// console.log(shipTwo.fullCoords);
+// console.log(shipTwo.dupeCheck);
+// console.log(dupeCoordsChecker(shipTwo));
+// console.log(shipTwo.fullCoordsBuilder);
+// 
+// console.log(shipThree);
+// console.log(shipThree.fullCoords);
+// console.log(shipThree.dupeCheck);
+// console.log(dupeCoordsChecker(shipThree));
+// console.log(shipThree.fullCoordsBuilder);
+
+// console.log(shipFour);
+// console.log(shipFour.fullCoords);
+// console.log(shipFour.dupeCheck);
+// console.log(dupeCoordsChecker(shipFour));
+// console.log(shipFour.fullCoordsBuilder);
+
+// console.log(shipFive);
+// console.log(shipFive.fullCoords);
+// console.log(shipFive.dupeCheck);
+
+// console.log(dupeCoordsChecker(shipFive));
+// console.log(shipFive.fullCoordsBuilder);
+
+// console.log(shipFive.pusher);
+// console.log(totalCoords);
+// for (const [prop,val] of Object.entries(shipFive)){
+//     console.table(val);
+// }
+
+
+// if new ship's coords are a duplication of other coords, it returns true.
+
+//Turn this into a function, template litterals
+
+// const fullCoordsBuilder = () =>{
+//     while(dupeCoordsChecker(this.fullCoords)){
+//     this.firstCoord = coordSplitter();
+// };
+// }
+/*console.log(totalCoords);
+ */
+// Ship.prototype.duplicateCheck = fullCoordsBuilder(this.fullCoords);
+// console.log(shipOne.dupeCoordsChecker(this.fullCoords));
+// let enemiesLeft = (totalCoords.map((enemies) =>
+// enemies.includes(prevGuesses) && enemies.includes(totalCoords)).length) -1;
+// function hitChecker(guess, ) {
+//     if (totalCoords.includes(guess)) {
+//         console.log(`You have hit a Battleship! You have ${enemiesLeft} ship remaining! `);
+        
+
+//         if (guess == enemyShip1.coords) {
+//             enemyShip1.isSunk = true;
+//         } else if (guess == enemyShip2.coords) {
+//             enemyShip2.isSunk = true;
+//         };
+//     }
+//     else {
+//         console.log('You have missed!');
+
+
+        /* This is for cheating in the game to make it go faster (and helped with my coding ;D ) 
+        vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+        console.log(`Try aiming for ${enemyCoords}.`);
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        Remove this comment if you want EZ mode*/
+//     };
+// }
+
+
+
+// const firstShip = easyShipBuilder(coordSplitter(),randomBool,generateShip(2));
+// const secondShip = easyShipBuilder(coordSplitter(),randomBool,generateShip(3));
+// const thirdShip = easyShipBuilder(coordSplitter(),randomBool,generateShip(3));
+// const fourthShip = easyShipBuilder(coordSplitter(),randomBool,generateShip(4));
+// const fifthShip = easyShipBuilder(coordSplitter(),randomBool,generateShip(5));
+
+// console.log(firstShip);
+// console.log(secondShip);
+// console.log(thirdShip);
+// console.log(fourthShip);
+// console.log(fifthShip);
+
+
+
+// const fullCoordsBuilder = (ship) => {
+//    if(dupeCoordsChecker(ship.fullCoords)){
+//         console.log(ship.fullCoords);
+//         ship.firstCoord = coordSplitter();
+//         console.log(ship.fullCoords);
+//     // totalCoords.push(...(ship.fullCoords));
+// }
+// };
+//IT MIGHT BE WORKING, BUT IT"S NOT BEING REPUSHED to TOTAL COORDS!!!
+// I don't need to REMOVE the duplicates, I just need to ensure 17 UNIQUE coords
+
+
+//             (shipNum,) => {
+//     for(let i=0; i>ships; i++){
+//         for(coord of shipNum[i].fullCoords){
+//         }
+//     }this.isVert= isVert;// randomBoolean to determine the ships' heading
+// }  // this.firstCoord = firstCoord; // coordSplitter() 
+
+
+//         getFullCoords = vertCheck (this.isVert, this.firstCoord[0], this.firstCoord[this.firstCoord.length - 1],this.shipLength);
+//        getDupeCheck = () =>{
+//            dupeCoordsChecker(this.fullCoords)};// used for testing
+
+//         // this.fullCoordsBuilder = fullCoordsBuilder(this.fullCoords, Ship.prototype.fullCoords, this.isVert,this.firstCoord[0],this.firstCoord[this.firstCoord.length - 1],this.shipLength); // This needs to be running in here to change the coords before they're pushed.
+//         // this.pushSet = totalCoordsSet.add(totalCoords,...(this.fullCoords));
+//     // fullCoordsBuilder() {
+//     //     while(dupeCoordsChecker(this.fullCoords)){
+//     //     this.firstCoord = coordSplitter();
+//     // }
+//     // };  //this.pusher = totalCoords.push(...(this.fullCoords));
+
+
+// const easyShipBuilder = (first,orient,coords) => ({
+//     first,
+//     orient,
+//     coords,
+// });
+
+
+
+//  const totalCoordsSet = new Set();
+// const setBuilder = () => {
+//     totalCoords.forEach(coord => totalCoordsSet.add(coord));
+// }

@@ -41,7 +41,7 @@ const coordSplitter = (firstCoord = randomCoord()) => {
 
 /* This is just to flip a coin essentially, of horizontal
 or vertical placements */
-const randomBool = Math.random() < 0.5;
+const randomBool = () => (Math.random() < 0.5);
 
 /* Function to get Letter's number */
 const indexOfLetter = (shipFirstIndex) => alphabet.indexOf(shipFirstIndex);
@@ -68,7 +68,7 @@ const wholeShipBuilderHorizontal = (shipFirstLetter, shipLength, shipLast) => {
     for (let i = 0; i < shipLength; i++) {
         if (shipLast !== 10) {
             shipArray.push(shipFirstLetter + (Number(shipLast) + Number(i)));
-        } else if (shipLast === 10){
+        } else if (shipLast === 10) {
             shipArray.push(shipFirstLetter + (6 + i));
         }
     }
@@ -79,7 +79,7 @@ const wholeShipBuilderHorizontal = (shipFirstLetter, shipLength, shipLast) => {
 and if so, it moves the first letter/number back so that the ship's length can still fit in the grid */
 
 const borderCheckerVertical = (shipFirstLetter, shipLength, shipLast) => {
-        //run it like usual if its NOT going to run past j and NOT 10   
+    //run it like usual if its NOT going to run past j and NOT 10   
     if (indexOfLetter(shipFirstLetter) <= (lenAndWid - shipLength) && shipLast != 0) {
         return wholeShipBuilderVertical(shipFirstLetter, shipLength, shipLast);
         //if IS going to run past j and NOT 10, subtract the ship length so  new ind max letter will be j
@@ -96,7 +96,7 @@ const borderCheckerVertical = (shipFirstLetter, shipLength, shipLast) => {
     }
 };
 const borderCheckerHorizontal = (shipFirstLetter, shipLength, shipLast) => {
-        //if number will NOT go over and coord is NOT 10
+    //if number will NOT go over and coord is NOT 10
     if (shipLast <= (lenAndWid - shipLength) && shipLast != 0) {
         return wholeShipBuilderHorizontal(shipFirstLetter, shipLength, shipLast);
         //if number DOES go over and coord  is NOT 10
@@ -120,162 +120,143 @@ const vertCheck = (isVert, shipFirstLetter, shipLast, shipLength) => {
 };
 
 let totalCoords = [];
- const totalCoordsSet = new Set();
-const setBuilder = () => {
-    totalCoords.forEach(coord => totalCoordsSet.add(coord));
-}
+let hitCoords = [];
 
-const dupeCoordsChecker = (shipsFullCoords) =>{
-    for (const coord of shipsFullCoords){
-        if (totalCoords.includes(coord)){
-        return true;
-    } else {
+
+const dupeCoordsChecker = (coords) => {
+    if (!coords.some(elm => totalCoords.includes(elm))) {
         return false;
+    } else {
+        return true;
     }
-}
+
 };
-
-//Ship.prototype.firstCoord = coordSplitter();
-const fullCoordsBuilder = (ship) => {
-   if(dupeCoordsChecker(ship.fullCoords)){
-    // console.log(ship.fullCoords);
-    shipProtoCoord = coordSplitter();
-   newVertCheck = vertCheck (ship.isVert, ship.firstCoord[0], ship.firstCoord[ship.firstCoord.length - 1],ship.shipLength);
-//    console.log(ship.fullCoords);
-   return newVertCheck;
+function generateShip(shipLength) {
+    let firstCoord = coordSplitter();
+    let orientation = randomBool();
+    let coords = vertCheck(orientation, firstCoord[0], firstCoord[firstCoord.length - 1], shipLength);
+    return shipDupeChecker(coords);
 }
+
+const shipDupeChecker = (coords) => {
+    if (dupeCoordsChecker(coords)) {
+        return generateShip(coords.length);
+    } else {
+        totalPusher(coords);
+        return coords;
+    }
 };
-// const fullCoordsBuilder = (ship) => {
-//    if(dupeCoordsChecker(ship.fullCoords)){
-//         console.log(ship.fullCoords);
-//         ship.firstCoord = coordSplitter();
-//         console.log(ship.fullCoords);
-//     // totalCoords.push(...(ship.fullCoords));
-// }
-// };
-//IT MIGHT BE WORKING, BUT IT"S NOT BEING REPUSHED to TOTAL COORDS!!!
-// I don't need to REMOVE the duplicates, I just need to ensure 17 UNIQUE coords
-
-
-//             (shipNum,) => {
-//     for(let i=0; i>ships; i++){
-//         for(coord of shipNum[i].fullCoords){
-
-//         }
-//     }
-// }
-
-class Ship {
-    constructor(shipNum, shipLength, firstCoord,isVert, isSunk = false){
-        this.shipNum = shipNum; //to give ship unique ID
-        this.shipLength = shipLength; // assigned when creating the ships
-        this.firstCoord = firstCoord; // coordSplitter() 
-        this.isVert= isVert;// randomBoolean to determine the ships' heading
-        this.isSunk = isSunk; // will change in the actual game
-
-        this.fullCoords = vertCheck (this.isVert, this.firstCoord[0], this.firstCoord[this.firstCoord.length - 1],this.shipLength);
-        this.dupeCheck = dupeCoordsChecker(this.fullCoords);// used for testing
-
-        // this.fullCoordsBuilder = fullCoordsBuilder(this.fullCoords, Ship.prototype.fullCoords, this.isVert,this.firstCoord[0],this.firstCoord[this.firstCoord.length - 1],this.shipLength); // This needs to be running in here to change the coords before they're pushed.
-
-        this.pusher = totalCoords.push(...(this.fullCoords));
-        // this.pushSet = totalCoordsSet.add(totalCoords,...(this.fullCoords));
-        
-    };
-    // fullCoordsBuilder() {
-    //     while(dupeCoordsChecker(this.fullCoords)){
-    //     this.firstCoord = coordSplitter();
-    // }
-    // };
-
+function totalPusher(coords) {
+    totalCoords.push(...coords);
 }
 
-const shipOne = new Ship(1,2,coordSplitter(), randomBool);
-fullCoordsBuilder(shipOne);
+const shipSparta = generateShip(4);
 
-// console.log(totalCoords);
-const shipTwo = new Ship(2,3,coordSplitter(), randomBool);
-fullCoordsBuilder(shipTwo);
-console.log(shipTwo.dupeCheck);
-
-// console.log(totalCoords);
-const shipThree = new Ship(3,3,coordSplitter(), randomBool);
-fullCoordsBuilder(shipThree);
-console.log(shipThree.dupeCheck);
-
-// console.log(totalCoords);
-const shipFour = new Ship(4,4,coordSplitter(),randomBool);
-fullCoordsBuilder(shipFour);
-console.log(shipFour.dupeCheck);
-
-// console.log(totalCoords);
-const shipFive = new Ship(5,5,coordSplitter(),randomBool);
-fullCoordsBuilder(shipFive);
-console.log(shipFive.dupeCheck);
-
-
-// setBuilder(); // build function where set size is not at total ship lengths sum, to reroll the previous object
-
-// for (const [prop,val] of Object.entries(shipFive)){
-//     console.table(val);
-// }
-
-// totalCoordsSet.add((totalCoords.flat()));
-// console.log(totalCoords);
-// console.log(totalCoordsSet);
-
-
-
-// console.log(totalCoords.length);
-// console.log(totalCoordsSet.size);
-//AN ARRAY OF OBJECTS - jason from the meeting today 6.18.22
-// Idea for dupe checker: add items from ship 1 to a new array[] by ...
-// if  newarray.includes any of ship2, then shipTwo.firstCoord = coord splitter, then run through dupecheck again. 
-
-
-// console.log(shipOne);
-// console.log(shipOne.fullCoords);
-// console.log(shipOne.dupeCheck);
-// console.log(shipOne.fullCoordsBuilder);
-
-// console.log(shipTwo);
-// console.log(shipTwo.fullCoords);
-// console.log(shipTwo.dupeCheck);
-// console.log(shipTwo.fullCoordsBuilder);
-
-// console.log(shipThree);
-// console.log(shipThree.fullCoords);
-// console.log(shipThree.dupeCheck);
-// console.log(shipThree.fullCoordsBuilder);
-
-// console.log(shipFour);
-// console.log(shipFour.fullCoords);
-// console.log(shipFour.dupeCheck);
-// console.log(shipFour.fullCoordsBuilder);
-
-// console.log(shipFive);
-// console.log(shipFive.fullCoords);
-// console.log(shipFive.dupeCheck);
-// console.log(shipFive.fullCoordsBuilder);
-
-// console.log(shipFive.pusher);
 console.log(totalCoords);
-// for (const [prop,val] of Object.entries(shipFive)){
-//     console.table(val);
-// }
+
+const shipTwwo = generateShip(2);
+
+const shipThrree = generateShip(3);
+
+const shipFo = generateShip(4);
+
+const shipFivvv = generateShip(5);
+
+const freet = [shipSparta, shipTwwo, shipThrree, shipFo, shipFivvv].flat(1);
+
+console.log(shipSparta);
+// console.log(dupeCoordsChecker(shipSparta));
+console.log(shipTwwo);
+// console.log(dupeCoordsChecker(shipTwwo));
+console.log(shipThrree);
+// console.log(dupeCoordsChecker(shipThrree));
+console.log(shipFo);
+// console.log(dupeCoordsChecker(shipFo))
+console.log(shipFivvv);
+// console.log(dupeCoordsChecker(shipFivvv));
+console.log(totalCoords);
+console.log(freet);
+/*
+class Ship {
+    constructor(num, shipLength,coords, isSunk = false){
+        this.num = num; //to give ship unique ID
+        this.shipLength = shipLength; // assigned when creating the ships
+        this.isSunk = isSunk; // will change in the actual game
+        this.coords = coords;
+    };
+    
+
+}
+
+let guess = 'B5';
+
+// console.log(totalCoords);
+
+const shipOne = new Ship(1,2,generateShip(2), false);
+// const shipOne = ;
+console.log(shipOne);;
 
 
-// if new ship's coords are a duplication of other coords, it returns true.
+// console.log(totalCoords);
+const shipTwo = new Ship(2,3,generateShip(3), false);
+// const shipTwo = generateShip(3);
+// console.log(shipTwo);
+// console.log(shipTwo.getDupeCheck());
 
-//Turn this into a function, template litterals
+// console.log(totalCoords);
+const shipThree = new Ship(3,3,generateShip(3), false);
+// const shipThree = generateShip(3);
+// console.log(shipThree);
+// console.log(shipThree.getDupeCheck());
 
-// const fullCoordsBuilder = () =>{
-//     while(dupeCoordsChecker(this.fullCoords)){
-//     this.firstCoord = coordSplitter();
-// };
-// }
-/*console.log(totalCoords);
- */
-// Ship.prototype.duplicateCheck = fullCoordsBuilder(this.fullCoords);
-// console.log(shipOne.dupeCoordsChecker(this.fullCoords));
+// console.log(totalCoords);
+const shipFour = new Ship(4,4,generateShip(4), false);
+// const shipFour = generateShip(4);
+// console.log(shipFour);
+// console.log(shipFour.getDupeCheck());
 
+// console.log(totalCoords);
+const shipFive = new Ship(5,5,generateShip(5), false);
+// const shipFive = generateShip(5);
+// console.log(shipFive);
+// console.log(shipFive.getDupeCheck());
+const fleet = [shipOne,shipTwo,shipThree,shipFour,shipFive];
+const fleetMap = (fleet.map((x)=> x.coords)).flat(1);
+console.log(fleetMap);
+// console.log(totalCoords);
+
+
+
+const hitCheck = (guess) =>{
+    if (totalCoords.includes(guess)){
+        hitCoords.push(guess);
+        console.log(`You have hit a Battleship! You have ${totalCoords.length-(hitCoords.length)} ship remaining! `);
+    } else {
+        console.log('You have missed!');
+    }
+};
+hitCheck();
+
+// console.log(hitCoords);
+
+//THIS Method checks an idividual ship, will have to run this through a seperate function
+const deadShipCheck = (ship) => {
+        if (hitCoords.includes(ship.coords)){
+            ship.isSunk = true;
+            console.log(`Ship Number ${ship.num} is sunk!`);
+        }
+    };
+
+deadShipCheck(shipFive);
+
+const includedInTotal = (x) =>{
+    return totalCoords.includes(x);
+}
+
+const gameOverCheck = () =>{
+    if (hitCoords.every(includedInTotal())){
+        console.log("YOU HAVE WON! NO SHIPS REMAINING");
+    }
+};
+// console.log(gameOverCheck());
+*/

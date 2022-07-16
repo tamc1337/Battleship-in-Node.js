@@ -13,7 +13,7 @@ Here are some things I've noticed about this program that I will try to implemen
     2. The duplicate checker.
     and 3. The clarifying victory settings. 
 
-I will plan on returning to do parts 3 and 4 someday, but I'm excited to move on and hopefully someday I can feel like I can actually handle the actual challenges of a developer. 
+
 
 Thank you.
 Taylor McNair, 7/8/2022
